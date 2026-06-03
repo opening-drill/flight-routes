@@ -35,6 +35,3 @@ def run_monitor(interval_seconds: int = 30):
             
         print(f"[Monitor] Sleeping for {interval_seconds} seconds...")
         time.sleep(interval_seconds)
-
-if __name__ == "__main__":
-    run_monitor()

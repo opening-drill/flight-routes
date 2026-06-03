@@ -1,4 +1,5 @@
 from database import RedisDB
+from monitor import run_monitor
 from models import Flight, Coordinate, PolygonModel, GeoJsonPolygon
 from datetime import datetime, timedelta
 import api_client
@@ -49,7 +50,9 @@ def main():
     fetched_polygon = db.get_polygon("test_polygon")
     if fetched_polygon:
         print(f"Fetched Polygon: {fetched_polygon.name}, Zone: {fetched_polygon.zone}")
-
+    
+    print("\nStarting monitor...")
+    run_monitor()
 
 if __name__ == "__main__":
     try:
