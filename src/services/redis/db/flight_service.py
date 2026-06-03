@@ -81,3 +81,39 @@ def create_new_flight(db: RedisDB, start: Coordinate, end: Coordinate, speed: fl
     print("Saving new flight to Redis...")
     db.save_flight(new_flight)
     return new_flight
+
+
+def validate_and_fix_existing_flight(flight: Flight, polygons: List[PolygonModel]) -> bool:
+    """
+    בודק האם נתיב הטיסה הקיים (מהמיקום הנוכחי ליעד) מתנגש עם פוליגונים, ומעדכן אותו אם כן.
+    מחשב מסלול חדש ומחזיר True אם המסלול עודכן, אחרת False.
+    """
+    if flight.current_location is None:
+        return False
+        
+    start = flight.current_location
+    end = flight.end_point
+    
+    # יצירת קו ישיר לבדיקת התנגשות
+    direct_line = LineString([(start.lng, start.lat), (end.lng, end.lat)])
+    
+    shapely_polygons = []
+    for p in polygons:
+        if p.geojson.coordinates and len(p.geojson.coordinates) > 0:
+            exterior_coords = p.geojson.coordinates[0]
+            if len(exterior_coords) >= 3:
+                shapely_polygons.append(ShapelyPolygon(exterior_coords))
+                
+    intersected_polygons = [sp for sp in shapely_polygons if direct_line.intersects(sp)]
+    
+    if not intersected_polygons:
+        return False
+        
+    print(f"Collision detected for flight {flight.flight_id}! Recalculating route...")
+    
+    # חישוב מסלול מחדש מהמיקום הנוכחי
+    new_safe_path = check_and_update_route(start, end, polygons)
+    
+    # עדכון מסלול הטיסה
+    flight.flight_path = new_safe_path
+    return True
