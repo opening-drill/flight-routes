@@ -11,8 +11,8 @@ from src.geo.config import URGENCY_LEVELS
 
 
 def build_simulated_flight(
-    event_id: int,
-    aircraft_id: int,
+    event_id: str,
+    aircraft_id: str,
     allowed_region_geojson: dict[str, Any],
     restricted_zone_rows: Any,
 ) -> dict[str, object]:
@@ -42,8 +42,8 @@ def build_simulated_flight(
 
 def build_simulation_messages(
     flight_count: int,
-    next_event_id_supplier: Callable[[], int],
-    free_aircraft_id_supplier: Callable[[], int],
+    next_event_id_supplier: Callable[[], str],
+    free_aircraft_id_supplier: Callable[[], str],
     allowed_region_geojson: dict[str, Any],
     restricted_zone_rows: Any,
 ) -> dict[str, object] | list[dict[str, object]]:

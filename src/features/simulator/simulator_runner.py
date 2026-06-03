@@ -18,9 +18,11 @@ from src.services.kafka import (
 )
 from src.services.postgres import (
     close_postgres_connection,
+    commit_postgres_transaction,
     fetch_restricted_zone_rows,
     generate_unused_event_id,
     open_postgres_connection_from_env,
+    rollback_postgres_transaction,
     select_random_free_aircraft_id,
 )
 
@@ -73,6 +75,10 @@ def run_simulator() -> None:
             flight_count=flight_count,
             postgres_connection=postgres_connection,
         )
+        commit_postgres_transaction(postgres_connection)
+    except Exception:
+        rollback_postgres_transaction(postgres_connection)
+        raise
     finally:
         close_postgres_connection(postgres_connection)
 

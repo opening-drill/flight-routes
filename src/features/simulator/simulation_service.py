@@ -7,8 +7,8 @@ from src.features.simulator.generation.simulated_flight_factory import (
 
 def generate_simulation_messages(
     flight_count: int,
-    next_event_id_supplier: Callable[[], int],
-    free_aircraft_id_supplier: Callable[[], int],
+    next_event_id_supplier: Callable[[], str],
+    free_aircraft_id_supplier: Callable[[], str],
     allowed_region_geojson: dict[str, Any],
     restricted_zone_rows: Any,
 ) -> dict[str, object] | list[dict[str, object]]:

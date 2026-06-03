@@ -63,6 +63,14 @@ def close_postgres_connection(connection: Any) -> None:
     connection.close()
 
 
+def commit_postgres_transaction(connection: Any) -> None:
+    connection.commit()
+
+
+def rollback_postgres_transaction(connection: Any) -> None:
+    connection.rollback()
+
+
 def _load_postgres_driver():
     try:
         import psycopg

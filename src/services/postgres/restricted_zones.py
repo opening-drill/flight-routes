@@ -6,8 +6,8 @@ def fetch_restricted_zone_rows(connection: Any) -> list[dict[str, Any]]:
     with connection.cursor() as cursor:
         cursor.execute(
             """
-            SELECT name, geojson, zone, state_duration
-            FROM polygons
+            SELECT id, name, geojson, zone, create_date
+            FROM polygon
             """
         )
         rows = cursor.fetchall()

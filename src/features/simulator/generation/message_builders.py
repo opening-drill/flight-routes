@@ -6,8 +6,8 @@ def build_location_payload(latitude: float, longitude: float) -> dict[str, float
 
 
 def build_simulation_payload(
-    event_id: int,
-    aircraft_id: int,
+    event_id: str,
+    aircraft_id: str,
     start: dict[str, float],
     end: dict[str, float],
     urgency: str,
