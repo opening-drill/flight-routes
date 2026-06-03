@@ -1,28 +1,19 @@
 from database import RedisDB
 from models import Flight, Coordinate, PolygonModel, GeoJsonPolygon
 from datetime import datetime, timedelta
+import api_client
+from flight_service import create_new_flight
+
 
 def main():
     # 1. חיבור ל-Redis
-    # ודאי שיש לך שרת Redis פועל ברקע (על פורט 6379 כדי להתחבר ב-Redis Insight)
     db = RedisDB()
 
-    # 2. יצירת אובייקט טיסה חדש (לפי השדות שביקשת)
-    start = Coordinate(lat=32.0853, lng=34.7818) # תל אביב לדוגמה
-    end = Coordinate(lat=31.7683, lng=35.2137)   # ירושלים לדוגמה
+    # 2. שימוש בפונקציה ליצירת טיסה
+    start = Coordinate(lat=32.0853, lng=34.7818) # תל אביב
+    end = Coordinate(lat=31.7683, lng=35.2137)   # ירושלים
     
-    new_flight = Flight(
-        start_point=start,
-        end_point=end,
-        average_speed_kmh=120.5,
-        urgency_level="HIGH",
-        flight_path=[start], # מתחילים עם הנקודה הראשונה במסלול
-        eta=datetime.now() + timedelta(hours=1)
-    )
-
-    # 3. שמירת הטיסה ל-Redis
-    print("Saving new flight...")
-    db.save_flight(new_flight)
+    new_flight = create_new_flight(db, start, end, speed=120.5, urgency="HIGH")
 
     # 4. שליפת הטיסה חזרה כדי לוודא שינויים
     print("\nFetching flight from Redis...")
