@@ -7,7 +7,7 @@ from src.features.user_simulator.generation.message_builders import (
 from src.features.user_simulator.generation.region_point_sampler import (
     sample_allowed_region_point,
 )
-from src.geo.config import URGENCY_LEVELS
+from src.config import URGENCY_LEVELS
 
 
 def build_simulated_flight(

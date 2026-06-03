@@ -1,8 +1,7 @@
-import sys
-
-sys.dont_write_bytecode = True
-
 from src.main import main
+from src.utils import disable_bytecode_writes
+
+disable_bytecode_writes()
 
 
 if __name__ == "__main__":

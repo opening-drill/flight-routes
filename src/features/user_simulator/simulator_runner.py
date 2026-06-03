@@ -1,13 +1,11 @@
-import os
 import sys
 from pathlib import Path
-
-sys.dont_write_bytecode = True
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.config import get_simulation_flight_count
 from src.env_loader import load_project_env
 from src.features.user_simulator.simulation_service import generate_simulation_messages
 from src.geo.config import load_combined_region_geojson
@@ -20,6 +18,9 @@ from src.services.postgres import (
     rollback_postgres_transaction,
     select_random_free_aircraft_id,
 )
+from src.utils import configure_runtime
+
+configure_runtime(__file__, 3)
 
 
 def build_simulation_output(
@@ -41,7 +42,7 @@ def build_simulation_output(
 
 def run_simulator() -> dict[str, object] | list[dict[str, object]]:
     load_project_env()
-    flight_count = int(os.getenv("FLIGHT_GENERATOR_NUM_FLIGHTS", "1"))
+    flight_count = get_simulation_flight_count()
     postgres_connection = open_postgres_connection_from_env()
 
     try:

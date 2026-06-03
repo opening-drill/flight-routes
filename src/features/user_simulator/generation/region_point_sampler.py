@@ -1,6 +1,7 @@
 import random
 from typing import Any
 
+from src.config import get_allowed_point_max_attempts
 from src.features.user_simulator.generation.message_builders import (
     build_location_payload,
 )
@@ -10,8 +11,9 @@ from src.geo import bounding_box, extract_polygons, point_in_any_polygon
 def sample_allowed_region_point(
     allowed_region_geojson: dict[str, Any],
     restricted_zone_rows: Any,
-    max_attempts: int = 5_000,
+    max_attempts: int | None = None,
 ) -> dict[str, float]:
+    resolved_max_attempts = max_attempts or get_allowed_point_max_attempts()
     allowed_polygons = extract_polygons(allowed_region_geojson)
     restricted_polygons = extract_polygons(restricted_zone_rows)
 
@@ -22,7 +24,7 @@ def sample_allowed_region_point(
         allowed_polygons
     )
 
-    for _ in range(max_attempts):
+    for _ in range(resolved_max_attempts):
         longitude = random.uniform(min_longitude, max_longitude)
         latitude = random.uniform(min_latitude, max_latitude)
 
@@ -36,5 +38,5 @@ def sample_allowed_region_point(
 
     raise RuntimeError(
         "Failed to generate a point inside the allowed region and outside "
-        f"restricted polygons after {max_attempts} attempts"
+        f"restricted polygons after {resolved_max_attempts} attempts"
     )
