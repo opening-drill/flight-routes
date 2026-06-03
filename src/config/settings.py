@@ -2,10 +2,6 @@ import os
 
 from src.config.constants import (
     DEFAULT_ALLOWED_POINT_MAX_ATTEMPTS,
-    DEFAULT_API_KEY_HEADER_NAME,
-    DEFAULT_API_LOGIN_PASSWORD,
-    DEFAULT_API_LOGIN_URL,
-    DEFAULT_API_LOGIN_USERNAME,
     DEFAULT_DISPATCH_TIMEOUT_SECONDS,
     DEFAULT_DISPATCH_URL,
     DEFAULT_JSON_OUTPUT_INDENT,
@@ -15,13 +11,9 @@ from src.config.constants import (
     DEFAULT_POSTGRES_PORT,
     DEFAULT_POSTGRES_SCHEMA,
     DEFAULT_SIMULATION_FLIGHT_COUNT,
+    DEFAULT_SIMULATION_INTERVAL_SECONDS,
     DEFAULT_UNUSED_EVENT_ID_MAX_ATTEMPTS,
     ENV_ALLOWED_POINT_MAX_ATTEMPTS,
-    ENV_API_KEY,
-    ENV_API_KEY_HEADER_NAME,
-    ENV_API_LOGIN_PASSWORD,
-    ENV_API_LOGIN_URL,
-    ENV_API_LOGIN_USERNAME,
     ENV_DISPATCH_TIMEOUT_SECONDS,
     ENV_DISPATCH_URL,
     ENV_JSON_OUTPUT_INDENT,
@@ -38,6 +30,7 @@ from src.config.constants import (
     ENV_POSTGRES_SSLMODE,
     ENV_POSTGRES_USER,
     ENV_SIMULATION_FLIGHT_COUNT,
+    ENV_SIMULATION_INTERVAL_SECONDS,
     ENV_UNUSED_EVENT_ID_MAX_ATTEMPTS,
     STATUS_BUSY,
     STATUS_FREE,
@@ -67,38 +60,6 @@ def get_allowed_point_max_attempts() -> int:
     return get_env_int(
         ENV_ALLOWED_POINT_MAX_ATTEMPTS,
         DEFAULT_ALLOWED_POINT_MAX_ATTEMPTS,
-    )
-
-
-def get_api_key() -> str | None:
-    return os.getenv(ENV_API_KEY)
-
-
-def get_api_key_header_name() -> str:
-    return get_env_str(
-        ENV_API_KEY_HEADER_NAME,
-        DEFAULT_API_KEY_HEADER_NAME,
-    )
-
-
-def get_api_login_password() -> str:
-    return get_env_str(
-        ENV_API_LOGIN_PASSWORD,
-        DEFAULT_API_LOGIN_PASSWORD,
-    )
-
-
-def get_api_login_url() -> str:
-    return get_env_str(
-        ENV_API_LOGIN_URL,
-        DEFAULT_API_LOGIN_URL,
-    )
-
-
-def get_api_login_username() -> str:
-    return get_env_str(
-        ENV_API_LOGIN_USERNAME,
-        DEFAULT_API_LOGIN_USERNAME,
     )
 
 
@@ -162,6 +123,13 @@ def get_simulation_flight_count() -> int:
     return get_env_int(
         ENV_SIMULATION_FLIGHT_COUNT,
         DEFAULT_SIMULATION_FLIGHT_COUNT,
+    )
+
+
+def get_simulation_interval_seconds() -> float:
+    return get_env_float(
+        ENV_SIMULATION_INTERVAL_SECONDS,
+        DEFAULT_SIMULATION_INTERVAL_SECONDS,
     )
 
 
