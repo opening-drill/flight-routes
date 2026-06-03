@@ -1,19 +1,24 @@
-import importlib
 import os
-from typing import Any, Callable
 
+from .config import load_combined_region_geojson
 from .data_generator import generate_flight_data
 from ...services.kafka import (
     close_kafka_producer,
     create_kafka_producer,
     publish_json_messages,
 )
+from ...services.postgres import (
+    close_postgres_connection,
+    create_postgres_connection_from_env,
+    fetch_polygon_rows,
+    generate_unique_event_id,
+    get_random_free_aircraft_id,
+)
 
 
 def publish_generated_flights(
     num_flights: int,
-    fetch_geography_batch: Callable[[], Any],
-    fetch_gaza_area: Callable[[], dict[str, Any]],
+    postgres_connection,
     bootstrap_servers: str | None = None,
     topic: str | None = None,
 ) -> list[dict[str, object]]:
@@ -26,10 +31,16 @@ def publish_generated_flights(
         "flight-routes",
     )
 
+    allowed_region_geojson = load_combined_region_geojson()
+    blocked_polygons = fetch_polygon_rows(postgres_connection)
     payloads = generate_flight_data(
         num_flights=num_flights,
-        fetch_geography_batch=fetch_geography_batch,
-        fetch_gaza_area=fetch_gaza_area,
+        next_event_id=lambda: generate_unique_event_id(postgres_connection),
+        get_random_free_aircraft_id=lambda: get_random_free_aircraft_id(
+            postgres_connection
+        ),
+        allowed_region_geojson=allowed_region_geojson,
+        blocked_polygons=blocked_polygons,
     )
     producer = create_kafka_producer(kafka_bootstrap_servers)
 
@@ -43,44 +54,17 @@ def publish_generated_flights(
         close_kafka_producer(producer)
 
 
-def _load_callable_from_env(env_var_name: str) -> Callable[[], Any]:
-    import_path = os.getenv(env_var_name)
-    if not import_path:
-        raise ValueError(
-            f"Missing required environment variable: {env_var_name}. "
-            "Expected format: package.module:function_name"
-        )
-
-    module_name, separator, function_name = import_path.partition(":")
-    if not separator or not module_name or not function_name:
-        raise ValueError(
-            f"Invalid value for {env_var_name}: {import_path}. "
-            "Expected format: package.module:function_name"
-        )
-
-    module = importlib.import_module(module_name)
-    fetch_function = getattr(module, function_name)
-
-    if not callable(fetch_function):
-        raise TypeError(
-            f"{env_var_name} resolved to a non-callable object: {import_path}"
-        )
-
-    return fetch_function
-
-
 def main() -> None:
     num_flights = int(os.getenv("FLIGHT_GENERATOR_NUM_FLIGHTS", "1"))
-    fetch_geography_batch = _load_callable_from_env(
-        "FLIGHT_GENERATOR_GEOGRAPHY_FETCHER"
-    )
-    fetch_gaza_area = _load_callable_from_env("FLIGHT_GENERATOR_GAZA_FETCHER")
+    postgres_connection = create_postgres_connection_from_env()
 
-    publish_generated_flights(
-        num_flights=num_flights,
-        fetch_geography_batch=fetch_geography_batch,
-        fetch_gaza_area=fetch_gaza_area,
-    )
+    try:
+        publish_generated_flights(
+            num_flights=num_flights,
+            postgres_connection=postgres_connection,
+        )
+    finally:
+        close_postgres_connection(postgres_connection)
 
 
 if __name__ == "__main__":

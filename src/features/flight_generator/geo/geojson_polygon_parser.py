@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 
@@ -26,6 +27,12 @@ def extract_polygons(geojson: Any) -> list[Polygon]:
     if geojson is None:
         return []
 
+    if isinstance(geojson, str):
+        try:
+            return extract_polygons(json.loads(geojson))
+        except json.JSONDecodeError:
+            return []
+
     if isinstance(geojson, list):
         polygons: list[Polygon] = []
         for item in geojson:
@@ -34,6 +41,9 @@ def extract_polygons(geojson: Any) -> list[Polygon]:
 
     if not isinstance(geojson, dict):
         return []
+
+    if "geojson" in geojson:
+        return extract_polygons(geojson.get("geojson"))
 
     geojson_type = geojson.get("type")
 
