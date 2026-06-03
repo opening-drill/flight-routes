@@ -4,6 +4,7 @@ from src.services.postgres.connection import (
     commit_postgres_transaction,
     open_postgres_connection,
     open_postgres_connection_from_env,
+    resolve_postgres_relation_name,
     rollback_postgres_transaction,
 )
 from src.services.postgres.event_ids import generate_unused_event_id
@@ -16,6 +17,7 @@ __all__ = [
     "generate_unused_event_id",
     "open_postgres_connection",
     "open_postgres_connection_from_env",
+    "resolve_postgres_relation_name",
     "rollback_postgres_transaction",
     "select_random_free_aircraft_id",
 ]

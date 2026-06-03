@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -11,9 +12,11 @@ from src.env_loader import load_project_env
 from src.features.simulator.simulator_runner import run_simulator
 
 
-def main() -> None:
+def main() -> dict[str, object] | list[dict[str, object]]:
     load_project_env()
-    run_simulator()
+    simulation_output = run_simulator()
+    print(json.dumps(simulation_output))
+    return simulation_output
 
 
 if __name__ == "__main__":

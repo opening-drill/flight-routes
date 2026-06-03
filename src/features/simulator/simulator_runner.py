@@ -11,11 +11,6 @@ if str(PROJECT_ROOT) not in sys.path:
 from src.env_loader import load_project_env
 from src.features.simulator.simulation_service import generate_simulation_messages
 from src.geo.config import load_combined_region_geojson
-from src.services.kafka import (
-    close_kafka_producer,
-    open_kafka_producer,
-    publish_messages,
-)
 from src.services.postgres import (
     close_postgres_connection,
     commit_postgres_transaction,
@@ -27,24 +22,13 @@ from src.services.postgres import (
 )
 
 
-def publish_simulation_messages(
+def build_simulation_output(
     flight_count: int,
     postgres_connection,
-    bootstrap_servers: str | None = None,
-    topic: str | None = None,
-) -> list[dict[str, object]]:
-    kafka_bootstrap_servers = bootstrap_servers or os.getenv(
-        "FLIGHT_GENERATOR_KAFKA_BOOTSTRAP_SERVERS",
-        "localhost:9092",
-    )
-    kafka_topic = topic or os.getenv(
-        "FLIGHT_GENERATOR_KAFKA_TOPIC",
-        "flight-routes",
-    )
-
+) -> dict[str, object] | list[dict[str, object]]:
     allowed_region_geojson = load_combined_region_geojson()
     restricted_zone_rows = fetch_restricted_zone_rows(postgres_connection)
-    payloads = generate_simulation_messages(
+    return generate_simulation_messages(
         flight_count=flight_count,
         next_event_id_supplier=lambda: generate_unused_event_id(postgres_connection),
         free_aircraft_id_supplier=lambda: select_random_free_aircraft_id(
@@ -53,29 +37,20 @@ def publish_simulation_messages(
         allowed_region_geojson=allowed_region_geojson,
         restricted_zone_rows=restricted_zone_rows,
     )
-    producer = open_kafka_producer(kafka_bootstrap_servers)
-
-    try:
-        return publish_messages(
-            producer=producer,
-            topic=kafka_topic,
-            messages=payloads,
-        )
-    finally:
-        close_kafka_producer(producer)
 
 
-def run_simulator() -> None:
+def run_simulator() -> dict[str, object] | list[dict[str, object]]:
     load_project_env()
     flight_count = int(os.getenv("FLIGHT_GENERATOR_NUM_FLIGHTS", "1"))
     postgres_connection = open_postgres_connection_from_env()
 
     try:
-        publish_simulation_messages(
+        simulation_output = build_simulation_output(
             flight_count=flight_count,
             postgres_connection=postgres_connection,
         )
         commit_postgres_transaction(postgres_connection)
+        return simulation_output
     except Exception:
         rollback_postgres_transaction(postgres_connection)
         raise

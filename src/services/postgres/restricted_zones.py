@@ -1,13 +1,20 @@
 import json
 from typing import Any
 
+from src.services.postgres.connection import resolve_postgres_relation_name
+
 
 def fetch_restricted_zone_rows(connection: Any) -> list[dict[str, Any]]:
+    restricted_zone_table = resolve_postgres_relation_name(
+        default_table_name="polygon",
+        table_env_var_name="FLIGHT_GENERATOR_POSTGRES_POLYGON_TABLE",
+    )
+
     with connection.cursor() as cursor:
         cursor.execute(
-            """
+            f"""
             SELECT id, name, geojson, zone, create_date
-            FROM polygon
+            FROM {restricted_zone_table}
             """
         )
         rows = cursor.fetchall()

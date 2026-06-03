@@ -71,6 +71,23 @@ def rollback_postgres_transaction(connection: Any) -> None:
     connection.rollback()
 
 
+def resolve_postgres_relation_name(
+    default_table_name: str,
+    table_env_var_name: str,
+) -> str:
+    schema_name = os.getenv("FLIGHT_GENERATOR_POSTGRES_SCHEMA", "public")
+    table_name = os.getenv(table_env_var_name, default_table_name)
+    return (
+        f"{_quote_postgres_identifier(schema_name)}."
+        f"{_quote_postgres_identifier(table_name)}"
+    )
+
+
+def _quote_postgres_identifier(identifier: str) -> str:
+    escaped_identifier = identifier.replace('"', '""')
+    return f'"{escaped_identifier}"'
+
+
 def _load_postgres_driver():
     try:
         import psycopg
