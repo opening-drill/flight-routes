@@ -1,11 +1,11 @@
-def build_point_payload(latitude: float, longitude: float) -> dict[str, float]:
+def build_location_payload(latitude: float, longitude: float) -> dict[str, float]:
     return {
         "latitude": latitude,
         "longitude": longitude,
     }
 
 
-def build_flight_payload(
+def build_simulation_payload(
     event_id: int,
     aircraft_id: int,
     start: dict[str, float],

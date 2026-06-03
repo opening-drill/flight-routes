@@ -2,7 +2,7 @@ import json
 from typing import Any
 
 
-def fetch_polygon_rows(connection: Any) -> list[dict[str, Any]]:
+def fetch_restricted_zone_rows(connection: Any) -> list[dict[str, Any]]:
     with connection.cursor() as cursor:
         cursor.execute(
             """

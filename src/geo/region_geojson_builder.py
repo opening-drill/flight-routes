@@ -1,6 +1,6 @@
 from typing import Any
 
-from geojson_polygon_parser import Polygon, extract_polygons
+from src.geo.geojson_polygon_parser import Polygon, extract_polygons
 
 
 def polygons_to_multi_polygon_geometry(polygons: list[Polygon]) -> dict[str, Any]:

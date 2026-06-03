@@ -2,7 +2,7 @@ import json
 from typing import Any
 
 
-def create_kafka_producer(bootstrap_servers: str):
+def open_kafka_producer(bootstrap_servers: str):
     try:
         from kafka import KafkaProducer
     except ModuleNotFoundError as error:
@@ -17,7 +17,7 @@ def create_kafka_producer(bootstrap_servers: str):
     )
 
 
-def publish_json_messages(
+def publish_messages(
     producer: Any,
     topic: str,
     messages: dict[str, object] | list[dict[str, object]],

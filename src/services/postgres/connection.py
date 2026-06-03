@@ -2,7 +2,7 @@ import os
 from typing import Any
 
 
-def create_postgres_connection(
+def open_postgres_connection(
     host: str,
     port: int,
     dbname: str,
@@ -25,7 +25,7 @@ def create_postgres_connection(
     return psycopg_module.connect(**connect_kwargs)
 
 
-def create_postgres_connection_from_env():
+def open_postgres_connection_from_env():
     host = os.getenv("FLIGHT_GENERATOR_POSTGRES_HOST")
     port = int(os.getenv("FLIGHT_GENERATOR_POSTGRES_PORT", "5432"))
     dbname = os.getenv("FLIGHT_GENERATOR_POSTGRES_DBNAME")
@@ -49,7 +49,7 @@ def create_postgres_connection_from_env():
             + ", ".join(missing_vars)
         )
 
-    return create_postgres_connection(
+    return open_postgres_connection(
         host=host,
         port=port,
         dbname=dbname,

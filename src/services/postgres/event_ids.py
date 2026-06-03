@@ -2,7 +2,7 @@ import random
 from typing import Any
 
 
-def generate_unique_event_id(
+def generate_unused_event_id(
     connection: Any,
     min_value: int = 1,
     max_value: int = 2_147_483_647,

@@ -1,17 +1,19 @@
 import random
 from typing import Any
 
-from ..geo import bounding_box, extract_polygons, point_in_any_polygon
-from .payload_builders import build_point_payload
+from src.features.simulator.generation.message_builders import (
+    build_location_payload,
+)
+from src.geo import bounding_box, extract_polygons, point_in_any_polygon
 
 
-def generate_random_allowed_point(
+def sample_allowed_region_point(
     allowed_region_geojson: dict[str, Any],
-    blocked_polygons: Any,
+    restricted_zone_rows: Any,
     max_attempts: int = 5_000,
 ) -> dict[str, float]:
     allowed_polygons = extract_polygons(allowed_region_geojson)
-    restricted_polygons = extract_polygons(blocked_polygons)
+    restricted_polygons = extract_polygons(restricted_zone_rows)
 
     if not allowed_polygons:
         raise ValueError("Allowed region GeoJSON does not contain any polygons")
@@ -30,7 +32,7 @@ def generate_random_allowed_point(
         if point_in_any_polygon(longitude, latitude, restricted_polygons):
             continue
 
-        return build_point_payload(latitude=latitude, longitude=longitude)
+        return build_location_payload(latitude=latitude, longitude=longitude)
 
     raise RuntimeError(
         "Failed to generate a point inside the allowed region and outside "

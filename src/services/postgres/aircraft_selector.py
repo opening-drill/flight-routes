@@ -1,7 +1,9 @@
 from typing import Any
 
 
-def get_random_free_aircraft_id(connection: Any, free_status: str = "FREE") -> int:
+def select_random_free_aircraft_id(
+    connection: Any, free_status: str = "FREE"
+) -> int:
     with connection.cursor() as cursor:
         cursor.execute(
             """

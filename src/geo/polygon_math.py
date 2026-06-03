@@ -1,4 +1,4 @@
-from .geojson_polygon_parser import Polygon, Ring
+from src.geo.geojson_polygon_parser import Polygon, Ring
 
 
 def point_in_ring(longitude: float, latitude: float, ring: Ring) -> bool:
