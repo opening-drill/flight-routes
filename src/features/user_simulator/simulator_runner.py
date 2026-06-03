@@ -9,7 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.env_loader import load_project_env
-from src.features.simulator.simulation_service import generate_simulation_messages
+from src.features.user_simulator.simulation_service import generate_simulation_messages
 from src.geo.config import load_combined_region_geojson
 from src.services.postgres import (
     close_postgres_connection,

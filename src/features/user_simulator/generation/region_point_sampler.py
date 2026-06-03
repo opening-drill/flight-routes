@@ -1,7 +1,7 @@
 import random
 from typing import Any
 
-from src.features.simulator.generation.message_builders import (
+from src.features.user_simulator.generation.message_builders import (
     build_location_payload,
 )
 from src.geo import bounding_box, extract_polygons, point_in_any_polygon

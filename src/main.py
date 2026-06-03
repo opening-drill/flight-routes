@@ -9,7 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.env_loader import load_project_env
-from src.features.simulator.simulator_runner import run_simulator
+from src.features.user_simulator.simulator_runner import run_simulator
 
 
 def main() -> dict[str, object] | list[dict[str, object]]:

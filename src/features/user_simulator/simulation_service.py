@@ -1,6 +1,6 @@
 from typing import Any, Callable
 
-from src.features.simulator.generation.simulated_flight_factory import (
+from src.features.user_simulator.generation.simulated_flight_factory import (
     build_simulation_messages,
 )
 
