@@ -208,6 +208,15 @@ tempCodeRunnerFile.py
 Thumbs.db
 Desktop.ini
 
+# General OS / editor junk
+.DS_Store
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*.swo
+
 # Ruff stuff:
 .ruff_cache/
 
