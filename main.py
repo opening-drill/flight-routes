@@ -2,7 +2,6 @@ from flightRouteCalculator import GPSDronePathPlanner
 import time
 import math
 
-
 class FlightPlannerTestHarness:
     """
     Simulates real-world, high-stress testing environments for the GPSDronePathPlanner.
@@ -210,4 +209,3 @@ if __name__ == "__main__":
     # Execute full stress testing cycle
     FlightPlannerTestHarness.run_integration_test()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
