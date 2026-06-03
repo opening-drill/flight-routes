@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Literal
 from datetime import datetime
 import uuid
 
@@ -21,3 +21,13 @@ class Flight(BaseModel):
         # Default current_location to start_point if not provided
         if self.current_location is None:
             self.current_location = self.start_point
+
+class GeoJsonPolygon(BaseModel):
+    type: Literal["Polygon"]
+    coordinates: List[List[List[float]]]
+
+class PolygonModel(BaseModel):
+    name: str
+    geojson: GeoJsonPolygon
+    zone: str
+    state_duration: int

@@ -1,7 +1,7 @@
 import redis
 import json
 from typing import Optional, List
-from models import Flight
+from models import Flight, PolygonModel
 
 class RedisDB:
     def __init__(self, host: str = 'localhost', port: int = 6379, db: int = 0):
@@ -52,3 +52,34 @@ class RedisDB:
             self.save_flight(flight)
             return flight
         return None
+
+    def _get_polygon_key(self, name: str) -> str:
+        return f"polygon:{name}"
+
+    def save_polygon(self, polygon: PolygonModel) -> None:
+        """שומר או מעדכן פוליגון ברדיס בפורמט JSON"""
+        polygon_json = polygon.model_dump_json()
+        self.r.set(self._get_polygon_key(polygon.name), polygon_json)
+        print(f"Polygon {polygon.name} saved successfully to Redis.")
+
+    def get_polygon(self, name: str) -> Optional[PolygonModel]:
+        """שולף פוליגון מהרדיס לפי שם"""
+        polygon_json = self.r.get(self._get_polygon_key(name))
+        if polygon_json:
+            return PolygonModel.model_validate_json(polygon_json)
+        return None
+
+    def delete_polygon(self, name: str) -> bool:
+        """מוחק פוליגון"""
+        result = self.r.delete(self._get_polygon_key(name))
+        return result > 0
+
+    def get_all_polygons(self) -> List[PolygonModel]:
+        """שולף את כל הפוליגונים שיש ב-DB"""
+        keys = self.r.keys("polygon:*")
+        polygons = []
+        for key in keys:
+            polygon_json = self.r.get(key)
+            if polygon_json:
+                polygons.append(PolygonModel.model_validate_json(polygon_json))
+        return polygons
