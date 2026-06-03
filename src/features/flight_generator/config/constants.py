@@ -1,0 +1,1 @@
+URGENCY_LEVELS = ("LOW", "MID", "HIGH")
