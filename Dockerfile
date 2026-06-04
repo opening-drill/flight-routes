@@ -18,8 +18,8 @@ RUN chmod +x docker-entrypoint.sh
 
 ENV PYTHONUNBUFFERED=1 \
     HEALTH_HOST=0.0.0.0 \
-    HEALTH_PORT=8080
+    HEALTH_PORT=5000
 
-EXPOSE 8080
+EXPOSE 5000
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
