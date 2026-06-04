@@ -1,0 +1,8 @@
+confluent-kafka
+networkx
+pyproj
+pydantic
+python-dotenv
+redis
+requests
+shapely

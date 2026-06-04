@@ -1,7 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
+
+
+def _default_eta() -> datetime:
+    return datetime.now() + timedelta(hours=1)
 
 class Coordinate(BaseModel):
     lat: float
@@ -15,7 +19,7 @@ class Flight(BaseModel):
     flight_path: List[Coordinate] = Field(default=[], description="מסלול הטיסה")
     urgency_level: str = Field(description="רמת דחיפות")
     current_location: Optional[Coordinate] = Field(default=None, description="מיקום נוכחי")
-    eta: datetime = Field(description="שעת הגעה ליעד")
+    eta: datetime = Field(default_factory=_default_eta, description="שעת הגעה ליעד")
 
     def model_post_init(self, __context) -> None:
         # Default current_location to start_point if not provided

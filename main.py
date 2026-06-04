@@ -205,7 +205,7 @@ class FlightPlannerTestHarness:
         # Write to local file system
         with open(geojson_filename, "w", encoding="utf-8") as geojson_file:
             json.dump(geojson_data, geojson_file, indent=2)
-
+        
         print(f"\n[EXPORT] Successfully generated GeoJSON map file: '{geojson_filename}'")
         print(f"[EXPORT] Total plotted tracking nodes: {len(flight_waypoints)}")
         print("=" * 60)
