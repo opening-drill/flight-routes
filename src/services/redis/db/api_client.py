@@ -29,6 +29,21 @@ def _headers() -> dict[str, str]:
         "X-Api-Key": _api_key(),
     }
 
+def dispatch() -> dict | None:
+    """Trigger Core dispatch (`GET /api/dispatch`)."""
+    try:
+        response = requests.get(
+            f"{CORE_BASE.rstrip('/')}/api/dispatch",
+            headers=_headers(),
+            params={"limit": 100, "page": 1},
+            timeout=10,
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Failed to call dispatch API: {e}")
+        return None
+
 
 def get_all_polygons() -> List[PolygonModel]:
     """Fetch no-fly polygons from Core (`GET /api/polygons`)."""

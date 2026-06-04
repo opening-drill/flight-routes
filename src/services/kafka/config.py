@@ -5,7 +5,7 @@ SECURITY_PROTOCOL = os.getenv('SECURITY_PROTOCOL', 'SASL_SSL')
 SASL_MECHANISMS = os.getenv('SASL_MECHANISMS', 'PLAIN')
 SASL_USERNAME = os.getenv('SASL_USERNAME', 'KQ5O3KDKWXHUKE22')
 SASL_PASSWORD = os.getenv('SASL_PASSWORD', 'cfltVFvW6XoewHBSrckHgr54ipLlwx7P2tHwVQL3OuVEqI4fWMvrzuJ/CzSxFMoA')
-GROUP_ID = os.getenv("KAFKA_GROUP_ID", "flight-routes")
+GROUP_ID = os.getenv("KAFKA_GROUP_ID", "flight-routes-1")
 INPUT_TOPIC = os.getenv("INPUT_TOPIC", "events")
 SESSION_TIMEOUT = os.getenv("SESSION_TIMEOUT", 45000)
 

@@ -6,7 +6,7 @@ from src.services.kafka import main_kafka
 from flightRouteCalculator import GPSDronePathPlanner
 import time
 import math
-
+from src.services.redis.db.api_client import dispatch
 
 class FlightPlannerTestHarness:
     """
@@ -243,6 +243,7 @@ def process_flight_message(key,value):
 if __name__ == "__main__":
     # Execute full stress testing cycle
     # FlightPlannerTestHarness.run_integration_test()
+    dispatch()
     main_kafka(process_flight_message)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
