@@ -1,3 +1,8 @@
+import sys
+import logging
+from src.services.kafka import config as KafkaConfig
+import json
+from src.services.kafka import main_kafka
 from flightRouteCalculator import GPSDronePathPlanner
 import time
 import math
@@ -205,9 +210,39 @@ class FlightPlannerTestHarness:
         print(f"[EXPORT] Total plotted tracking nodes: {len(flight_waypoints)}")
         print("=" * 60)
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger("MainService")
+
+def process_flight_message(key,value):
+    logger.info(f"--- Processing New Event ---")
+    logger.info(f"Received from '{KafkaConfig.INPUT_TOPIC}': key={key}, value={value}")
+    
+    # Parse payload
+    try:
+        payload = json.loads(value) if value else {}
+    except json.JSONDecodeError:
+        payload = {"raw_value": value}
+
+    start_coords = (payload["start"]["latitude"], payload["start"]["longitude"])
+    end_coords = (payload["end"]["latitude"], payload["end"]["longitude"])
+
+    print(f"\nProcessing Route [Event: {payload.get('event_id')} | Aircraft: {payload.get('aircraft_id')}]")
+    print(f"Routing From: {start_coords} -> To: {end_coords}")
+
+    waypoints = planner.plan_path(start_gps=start_coords, end_gps=end_coords)
+
+    print(f"Success! Generated {len(waypoints)} waypoints.")
+    print(f"Waypoints list: {waypoints}")
 
 if __name__ == "__main__":
     # Execute full stress testing cycle
-    FlightPlannerTestHarness.run_integration_test()
+    # FlightPlannerTestHarness.run_integration_test()
+    main_kafka(process_flight_message)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
