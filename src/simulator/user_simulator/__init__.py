@@ -1,5 +1,5 @@
-from src.features.user_simulator.simulation_service import generate_simulation_messages
-from src.features.user_simulator.simulator_runner import (
+from src.simulator.user_simulator.simulation_service import generate_simulation_messages
+from src.simulator.user_simulator.simulator_runner import (
     build_simulation_output,
     run_simulator,
 )

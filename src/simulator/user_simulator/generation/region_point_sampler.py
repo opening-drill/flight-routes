@@ -2,7 +2,7 @@ import random
 from typing import Any
 
 from src.config import get_allowed_point_max_attempts
-from src.features.user_simulator.generation.message_builders import (
+from src.simulator.user_simulator.generation.message_builders import (
     build_location_payload,
 )
 from src.geo import bounding_box, extract_polygons, point_in_any_polygon

@@ -7,7 +7,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.config import get_simulation_flight_count
 from src.env_loader import load_project_env
-from src.features.user_simulator.simulation_service import generate_simulation_messages
+from src.simulator.user_simulator.simulation_service import generate_simulation_messages
 from src.geo.config import load_combined_region_geojson
 from src.services.postgres import (
     close_postgres_connection,

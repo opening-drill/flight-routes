@@ -9,7 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.config import get_json_output_indent, get_simulation_interval_seconds
 from src.env_loader import load_project_env
-from src.features.user_simulator.simulator_runner import run_simulator
+from src.simulator.user_simulator.simulator_runner import run_simulator
 from src.services.api import dispatch_simulation_payloads
 from src.utils import configure_runtime
 

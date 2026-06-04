@@ -1,10 +1,10 @@
 from random import choice
 from typing import Any, Callable
 
-from src.features.user_simulator.generation.message_builders import (
+from src.simulator.user_simulator.generation.message_builders import (
     build_simulation_payload,
 )
-from src.features.user_simulator.generation.region_point_sampler import (
+from src.simulator.user_simulator.generation.region_point_sampler import (
     sample_allowed_region_point,
 )
 from src.config import URGENCY_LEVELS
