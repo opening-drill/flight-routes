@@ -1,4 +1,5 @@
 confluent-kafka
+flask
 networkx
 pyproj
 pydantic
