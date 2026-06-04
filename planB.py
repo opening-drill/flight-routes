@@ -168,7 +168,7 @@ def _flight_id_from_payload(payload: dict[str, Any]) -> str:
 
 def _save_to_redis(db: RedisDB, payload: dict[str, Any]) -> None:
     record_id = _flight_id_from_payload(payload)
-    raw_key = f"flight_raw:{record_id}"
+    raw_key = f"flight:{record_id}"
     db.r.set(raw_key, json.dumps(payload))
     logger.info("Saved enriched raw payload to Redis key %s", raw_key)
 
